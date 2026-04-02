@@ -1,5 +1,9 @@
 # GameHub
 
+Team Members:
+- Aneesh Palande
+- Hudson Degrace
+
 ## Checklist
 
 - [ ] frequent commits to github.
