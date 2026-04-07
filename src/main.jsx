@@ -1,10 +1,40 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { applySavedTheme } from "./utils/theme.js";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AppLayout } from "./components/AppLayout.jsx";
+import { HomePage } from "./pages/HomePage.jsx";
+import { LobbyView } from "./pages/LobbyPage.jsx";
+import { RPSGamePage } from "./pages/RPSGamePage.jsx";
+import { TicTacToePage } from "./pages/TicTacToePage.jsx";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
-createRoot(document.getElementById('root')).render(
+applySavedTheme();
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { path: "/", element: <HomePage />},
+      { path: '/lobby', element: <LobbyView />},
+      {path: '/game/rps', element: (
+        <ProtectedRoute>
+          <RPSGamePage />
+        </ProtectedRoute>
+      )},
+      {path: '/game/tic-tac-toe', element: (
+        <ProtectedRoute>
+          <TicTacToePage />
+        </ProtectedRoute>
+      )}
+    ],
+  },
+])
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <RouterProvider router={router} />
+  </StrictMode>
+);
