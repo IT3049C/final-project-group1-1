@@ -1,24 +1,34 @@
-export function WordleBoard({guesses, currentGuess, onInputChange}){
+import { config,  } from "./WordleGameHandler";
+
+
+export function WordleBoard(){
+    const grid = document.getElementById("wordle-board");
+
+    function setUpGrid() {
+        grid.innerHTML = '';
+        grid.style.gridTemplateRows = `repeat(${config.maxAttempts}, 1fr)`;
+        grid.style.gridTemplateColumns = `repeat(${config.wordLength}, 1fr)`;
+        const grid = document.getElementById("wordle-board");
+        for (let row = 0; row < config.maxAttempts; row++) {
+            for (let col = 0; col < config.wordLength; col++) {
+                addLetterToGrid(row, col);
+            }
+        }
+    }
+
+    function addLetterToGrid(row, col) {
+        const letter = document.createElement('div');
+        letter.classList.add(`letter`);
+        letter.id = `letter-r${row}-c${col}`;
+        grid.appendChild(letter);
+    }
+    
+    setUpGrid();
+
     return(
-    <div className="wordle-board">
-        {guesses.map((guess, index) => (
-            <div key={index} className="guess-row">
-                {guess.split("").map((letter, letterIndex) => (
-                    <div key={letterIndex} className="guess-letter">
-                        {letter}
-                    </div>
-                ))}
-            </div>
-        ))}
-        <div className="current-guess-row">
-            <input 
-                type="text" 
-                maxLength="5" 
-                className="current-guess-input" 
-                value={currentGuess} 
-                onChange={onInputChange} 
-            />
+        <div id="wordle-board" className="wordle-board">
+        
         </div>
-    </div>
+
     );
 }

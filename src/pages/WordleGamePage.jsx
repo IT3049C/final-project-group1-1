@@ -1,8 +1,18 @@
+import { PlayerInfoCard } from "../components/rps-game/PlayerInfoCard";
+import { WordleMain } from "../components/wordle-game/WordleMain";
+import { loadSettings } from "../logic/settings";
+
 export function WordleGamePage(){
-    return(
-        <div className="wordle-game-page">
-            <h2>Wordle Game</h2>
-            <p>Wordle Game Placeholder</p>
-        </div>
-    );
+    const settings = loadSettings();
+    const playerName = settings?.name || 'Player';
+    const playerAvatar = settings?.avatar;
+    return (
+        <>
+        <h2>Wordle Game</h2>
+        <PlayerInfoCard playerName={playerName} playerAvatar={playerAvatar} />
+
+        <WordleMain />
+
+        </>
+    )
 }
