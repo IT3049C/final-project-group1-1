@@ -20,8 +20,6 @@ export function WordleMain() {
 
     return (
         <div className="wordle-main">
-            <h3>Wordle Game</h3>
-            <p>Guess the 5-letter word!</p>
 
             {loading ? (
                 <p className="wordle-status" aria-live="polite">

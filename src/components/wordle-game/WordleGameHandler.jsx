@@ -6,17 +6,13 @@ export const config = {
 
 const FALLBACK_WORDS = [
     'APPLE',
-    'BRAVE',
-    'CRANE',
     'DREAM',
-    'FROST',
     'GHOST',
     'LEMON',
     'MANGO',
     'NINJA',
     'QUEST',
     'ROBOT',
-    'SHINE',
     'TRAIN',
     'WATER',
     'ZEBRA',
@@ -83,7 +79,7 @@ export async function getRandomWord() {
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`Word API request failed with status ${response.status}`);
+            throw new Error(`Word API request failed (${response.status})`);
         }
 
         const payload = await response.json();
