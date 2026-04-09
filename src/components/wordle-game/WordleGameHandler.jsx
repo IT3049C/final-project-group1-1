@@ -1,50 +1,100 @@
 
-
 export const config = {
     maxAttempts: 6,
-    wordLength: 5
+    wordLength: 5,
 };
 
-export const targetWord = getRandomWord();
+const FALLBACK_WORDS = [
+    'APPLE',
+    'BRAVE',
+    'CRANE',
+    'DREAM',
+    'FROST',
+    'GHOST',
+    'LEMON',
+    'MANGO',
+    'NINJA',
+    'QUEST',
+    'ROBOT',
+    'SHINE',
+    'TRAIN',
+    'WATER',
+    'ZEBRA',
+];
 
-export const gameState = {
-    currentPosition: 0,
-    currentAttempt: 0,
-    targetWord: await getRandomWord(),
-};
-
-export function checkGuess(userGuess) {
-    const isValid = isValidWord(userGuess);
-    if (!isValid) {
-        return !isValid;
+export function isValidWord(word) {
+    if (typeof word !== 'string') {
+        return false;
     }
 
-    const userGuessArray = userGuess.toUpperCase().split('');
-    const targetWordArray = targetWord.toUpperCase().split('');
+    const normalized = word.trim().toUpperCase();
+    return normalized.length === config.wordLength && /^[A-Z]+$/.test(normalized);
+}
 
-const results = userGuessArray.map((letter, index) => {
-    if (letter === targetWordArray[index]) {
-        return 'correct';
-    } else if (targetWordArray.includes(letter)) {
-        return 'misplaced';
-    } else {
-        return 'wrong';
+export function normalizeGuess(word) {
+    return (word || '').trim().toUpperCase();
+}
+
+export function checkGuess(guess, targetWord) {
+    const normalizedGuess = normalizeGuess(guess);
+    const normalizedTarget = normalizeGuess(targetWord);
+
+    if (!isValidWord(normalizedGuess) || !isValidWord(normalizedTarget)) {
+        return null;
     }
-    });
+
+    const results = Array(config.wordLength).fill('wrong');
+    const targetChars = normalizedTarget.split('');
+    const guessChars = normalizedGuess.split('');
+
+    // Pass 1: exact matches.
+    for (let index = 0; index < config.wordLength; index++) {
+        if (guessChars[index] === targetChars[index]) {
+            results[index] = 'correct';
+            targetChars[index] = null;
+            guessChars[index] = null;
+        }
+    }
+
+    // Pass 2: misplaced matches with duplicate handling.
+    for (let index = 0; index < config.wordLength; index++) {
+        if (!guessChars[index]) {
+            continue;
+        }
+
+        const misplacedIndex = targetChars.indexOf(guessChars[index]);
+        if (misplacedIndex !== -1) {
+            results[index] = 'misplaced';
+            targetChars[misplacedIndex] = null;
+        }
+    }
+
     return results;
 }
 
-function isValidWord(word) {
-return gameState.targetWord.includes(word.toLowerCase());
+function getFallbackWord() {
+    const index = Math.floor(Math.random() * FALLBACK_WORDS.length);
+    return FALLBACK_WORDS[index];
 }
 
-async function getRandomWord() {
-try {
-    const url = `https://random-word-api.herokuapp.com/word?length=${config.wordLength}`;
-    const response = await fetch(url);
-    const jsonifiedresponse = await response.json();
-    return jsonifiedresponse[0];
-} catch (error) {
-    console.error('Error fetching random word:', error);
-}
+export async function getRandomWord() {
+    try {
+        const url = `https://random-word-api.herokuapp.com/word?length=${config.wordLength}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Word API request failed with status ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const candidate = normalizeGuess(payload?.[0]);
+
+        if (isValidWord(candidate)) {
+            return candidate;
+        }
+    } catch (error) {
+        console.error('Error fetching random word:', error);
+    }
+
+    return getFallbackWord();
 }

@@ -1,41 +1,36 @@
-import { useState } from "react";
 
-export function WordleMain(){
-    const [guesses, setGuesses] = useState([]);
-    const [currentGuess, setCurrentGuess] = useState("");
+import { useCallback, useEffect, useState } from 'react';
+import { WordleBoard } from './WordleBoard';
+import { getRandomWord } from './WordleGameHandler';
 
-    const handleInputChange = (e) => {
-        setCurrentGuess(e.target.value);
-    }
-    return(<>
-    <div className="wordle-main">
-        <h3>Wordle Game</h3>
-        <p>Guess the 5-letter word!</p>
-        <div className="wordle-board">
-            {guesses.map((guess, index) => (
-                <div key={index} className="guess-row">
-                    {guess.split("").map((letter, letterIndex) => (
-                        <div key={letterIndex} className="guess-letter">
-                            {letter}
-                        </div>
-                    ))}
-                </div>
-            ))}
-            <div className="current-guess-row">
-                <input 
-                    type="text" 
-                    maxLength="5" 
-                    className="current-guess-input" 
-                    value={currentGuess} 
-                    onChange={handleInputChange} 
-                />
-            </div>
+export function WordleMain() {
+    const [targetWord, setTargetWord] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    const loadTargetWord = useCallback(async () => {
+        setLoading(true);
+        const nextWord = await getRandomWord();
+        setTargetWord(nextWord);
+        setLoading(false);
+    }, []);
+
+    useEffect(() => {
+        loadTargetWord();
+    }, [loadTargetWord]);
+
+    return (
+        <div className="wordle-main">
+            <h3>Wordle Game</h3>
+            <p>Guess the 5-letter word!</p>
+
+            {loading ? (
+                <p className="wordle-status" aria-live="polite">
+                    Loading word...
+                </p>
+            ) : (
+                <WordleBoard targetWord={targetWord} onRestart={loadTargetWord} />
+            )}
         </div>
-    </div>
-
-    </>
     );
-
-
 }
 
