@@ -9,6 +9,7 @@ import { LobbyView } from "./pages/LobbyPage.jsx";
 import { RPSGamePage } from "./pages/RPSGamePage.jsx";
 import { TicTacToePage } from "./pages/TicTacToePage.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { WordleGamePage } from "./pages/WordleGamePage.jsx";
 
 applySavedTheme();
 
@@ -28,7 +29,12 @@ const router = createBrowserRouter([
         <ProtectedRoute>
           <TicTacToePage />
         </ProtectedRoute>
-      )}
+      )},
+      {path: '/game/wordle', element: (
+        <ProtectedRoute>
+          <WordleGamePage />
+        </ProtectedRoute>
+      )},
     ],
   },
 ])

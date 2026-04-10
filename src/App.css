@@ -108,3 +108,68 @@ nav div {
   border-left: 1px solid var(--color-border);
   padding-left: 1rem;
 }
+
+.square {
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: 24px;
+  font-weight: normal;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+}
+
+.wordle-main {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.wordle-section {
+  width: min(420px, 100%);
+}
+
+.wordle-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.wordle-cell {
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--color-surface);
+}
+
+.wordle-cell.correct {
+  background: #3a9446;
+  border-color: #3a9446;
+  color: #fff;
+}
+
+.wordle-cell.misplaced {
+  background: #cc9d24;
+  border-color: #cc9d24;
+  color: #fff;
+}
+
+.wordle-cell.wrong {
+  background: #5a5a5a;
+  border-color: #5a5a5a;
+  color: #fff;
+}
+
+.wordle-status {
+  min-height: 1.5rem;
+  margin: 0 0 1rem;
+  color: var(--color-text-secondary);
+}
