@@ -9,6 +9,7 @@ import { LobbyView } from "./pages/LobbyPage.jsx";
 import { RPSGamePage } from "./pages/RPSGamePage.jsx";
 import { TicTacToePage } from "./pages/TicTacToePage.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { BattleshipPage } from "./pages/BattleshipPage.jsx";
 
 applySavedTheme();
 
@@ -27,6 +28,11 @@ const router = createBrowserRouter([
       {path: '/game/tic-tac-toe', element: (
         <ProtectedRoute>
           <TicTacToePage />
+        </ProtectedRoute>
+      )},
+      {path: '/game/battleship', element: (
+        <ProtectedRoute>
+          <BattleshipPage />
         </ProtectedRoute>
       )}
     ],

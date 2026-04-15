@@ -18,6 +18,8 @@ export function Navigation(){
         <NavLink to="/game/rps">Rock Paper Scissors</NavLink>
         {` | `}
         <NavLink to="/game/tic-tac-toe">Tic Tac Toe</NavLink>
+        {` | `}
+        <NavLink to="/game/battleship">Battleship</NavLink>
 
         {settings && settings.name && (
           <div>

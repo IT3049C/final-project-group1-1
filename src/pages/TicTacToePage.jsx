@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Board } from "../components/tic-tac-toe-game/Board";
+import { PlayerInfoCard } from "../components/PlayerInfoCard";
+import { loadSettings } from "../logic/settings";
 
 export function TicTacToePage() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
+
+  const settings = loadSettings();
+  const playerName = settings?.name || 'Player';
+  const playerAvatar = settings?.avatar;
 
   function handlePlay(nextSquares){
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -33,7 +39,10 @@ export function TicTacToePage() {
 
   return(
     <div className="game">
-    <h2>Tic-Tac-Toe</h2>
+      <header>
+        <h2>Tic-Tac-Toe</h2>
+      </header>
+      <PlayerInfoCard playerName={playerName} playerAvatar={playerAvatar}/>
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>

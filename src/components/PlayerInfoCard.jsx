@@ -1,4 +1,4 @@
-import { avatars } from "../../logic/avatars";
+import { avatars } from "../logic/avatars";
 
 export function PlayerInfoCard({ playerName, playerAvatar }) {
   console.log(playerAvatar);
