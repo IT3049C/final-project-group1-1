@@ -10,6 +10,7 @@ import { RPSGamePage } from "./pages/RPSGamePage.jsx";
 import { TicTacToePage } from "./pages/TicTacToePage.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { WordleGamePage } from "./pages/WordleGamePage.jsx";
+import { HangmanGamePage } from "./pages/HangmanGamePage.jsx";
 
 applySavedTheme();
 
@@ -35,6 +36,12 @@ const router = createBrowserRouter([
           <WordleGamePage />
         </ProtectedRoute>
       )},
+      {path: '/game/hangman', element: (
+        <ProtectedRoute>
+          <HangmanGamePage />
+        </ProtectedRoute>
+      )},
+      {path: '*', element: <h2>404 - Page Not Found</h2>},
     ],
   },
 ])
