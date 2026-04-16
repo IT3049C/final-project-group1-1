@@ -1,5 +1,5 @@
 import { PlayerInfoCard } from "../components/rps-game/PlayerInfoCard";
-import { HangmanUI } from "../components/hangman-game/HangmanUI";
+import { HangmanHandler } from "../components/hangman-game/HangmanHandler";
 import { loadSettings } from "../logic/settings";
 
 export function HangmanGamePage(){
@@ -11,7 +11,7 @@ export function HangmanGamePage(){
         <h2>Hangman</h2>
         <PlayerInfoCard playerName={playerName} playerAvatar={playerAvatar} />
 
-        <HangmanUI />
+        <HangmanHandler />
 
         </>
     )
