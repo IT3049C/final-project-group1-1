@@ -119,3 +119,19 @@ nav div {
   justify-content: center;
   border: 1px solid var(--color-border);
 }
+
+/* Battleship placement styles */
+.battleship-tile.placed-ship {
+  background-color: #666;
+  color: white;
+}
+
+.battleship-tile.potential-valid {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.battleship-tile.potential-invalid {
+  background-color: #f44336; /* Red */
+  color: white;
+}
