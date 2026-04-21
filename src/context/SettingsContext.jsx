@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 import { loadSettings, saveSettings as saveToStorage } from "../logic/settings";
 
 const SettingsContext = createContext(null);
@@ -20,12 +20,4 @@ export function SettingsProvider({ children }) {
   return (
     <SettingsContext.Provider value={{ settings, saveSettings, clearSettings }}>{children}</SettingsContext.Provider>
   );
-}
-
-export function useSettings() {
-  const context = useContext(SettingsContext);
-  if (!context) {
-    throw new Error("useSettings must be used within SettingsProvider");
-  }
-  return context;
 }
