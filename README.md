@@ -13,7 +13,7 @@ Team Members:
 <!--- Update the following line with your self-grade --->
 <!--- Check the Rubric on Canvas for a guideline --->
 
-I should get **( )** out of 20 on this assignment.
+I should get **(20)** out of 20 on this assignment.
 
 ## Self-Reflection
 
