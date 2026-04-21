@@ -37,7 +37,7 @@ export function BattleshipBoard({ playerName }){
     version: 0,
     updatedBy: playerName
   }
-  const { roomId, state, createRoom, pushState, setRoomId } = useGameRoom({ refetchInterval: 1000 });
+  const { roomId, state, createRoom, pushState, setRoomId } = useGameRoom({ refetchInterval: 200 });
 
   const currentPlayer = state?.players?.[0]?.name === playerName ? 'A' : 'B';
   const myBoard = currentPlayer === 'A' ? 'p1' : 'p2';

@@ -52,6 +52,7 @@ export const LobbyView = () => {
             required
             minLength="2"
             maxLength="15"
+            className="form-input"
           />
         </div>
 
@@ -78,7 +79,7 @@ export const LobbyView = () => {
 
         <div className="field">
           <label htmlFor="difficulty">Difficulty</label>
-          <select id="difficulty" name="difficulty" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+          <select id="difficulty" name="difficulty" value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="form-input">
             <option value="easy">easy</option>
             <option value="normal">normal</option>
             <option value="hard">hard</option>

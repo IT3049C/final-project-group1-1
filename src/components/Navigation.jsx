@@ -28,7 +28,9 @@ export function Navigation(){
         {settings && settings.name && (
           <div>
             <span>Hello, {settings.name}</span>
-            <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleLogout} className="">
+              Logout
+            </button>
           </div>
         )}
       </nav>

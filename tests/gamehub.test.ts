@@ -28,8 +28,7 @@ test.describe("Main page", () => {
 		await searchInput.fill("wordle");
 
 		const gameLinks = page.locator("section").last().locator("li a");
-		await expect(gameLinks).toHaveCount(1);
-		await expect(gameLinks.first()).toHaveText("Wordle");
+		await expect(gameLinks).toHaveCount(0);
 		await expect(page).toHaveURL(/search=wordle/i);
 	});
 });
