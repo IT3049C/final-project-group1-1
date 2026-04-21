@@ -15,8 +15,14 @@ export function WordleBoard({ targetWord, onRestart }) {
     const [currentGuess, setCurrentGuess] = useState('');
     const [statusMessage, setStatusMessage] = useState('Type a 5-letter guess and press Enter.');
     const [isComplete, setIsComplete] = useState(false);
+    const [flippingRow, setFlippingRow] = useState(null);
 
     const target = useMemo(() => normalizeGuess(targetWord), [targetWord]);
+    const isFlipping = flippingRow !== null;
+
+    const flipDurationMs = 420;
+    const flipStaggerMs = 130;
+    const totalFlipDurationMs = flipDurationMs + flipStaggerMs * (config.wordLength - 1);
 
     useEffect(() => {
         setGuesses(EMPTY_GUESSES);
@@ -25,10 +31,11 @@ export function WordleBoard({ targetWord, onRestart }) {
         setCurrentGuess('');
         setStatusMessage('Type a 5-letter word and press Enter.');
         setIsComplete(false);
+        setFlippingRow(null);
     }, [target]);
 
     const submitGuess = useCallback(() => {
-        if (isComplete) {
+        if (isComplete || isFlipping) {
             return;
         }
 
@@ -44,6 +51,11 @@ export function WordleBoard({ targetWord, onRestart }) {
         }
 
         const normalizedGuess = normalizeGuess(currentGuess);
+        setFlippingRow(currentAttempt);
+
+        window.setTimeout(() => {
+            setFlippingRow(null);
+        }, totalFlipDurationMs);
 
         setGuesses((previous) => {
             const next = [...previous];
@@ -75,11 +87,11 @@ export function WordleBoard({ targetWord, onRestart }) {
         setCurrentAttempt((value) => value + 1);
         setCurrentGuess('');
         setStatusMessage('Keep going.');
-    }, [currentAttempt, currentGuess, isComplete, target]);
+    }, [currentAttempt, currentGuess, isComplete, isFlipping, target, totalFlipDurationMs]);
 
     useEffect(() => {
         function onKeyDown(event) {
-            if (isComplete) {
+            if (isComplete || isFlipping) {
                 return;
             }
 
@@ -109,7 +121,7 @@ export function WordleBoard({ targetWord, onRestart }) {
 
         window.addEventListener('keydown', onKeyDown);
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, [isComplete, submitGuess]);
+    }, [isComplete, isFlipping, submitGuess]);
 
     return (
         <section className="wordle-section card" aria-label="Wordle game board">
@@ -127,11 +139,13 @@ export function WordleBoard({ targetWord, onRestart }) {
                     return Array.from({ length: config.wordLength }, (_, colIndex) => {
                         const letter = rowGuess[colIndex] || '';
                         const stateClass = rowResult[colIndex] || '';
+                        const isCellFlipping = flippingRow === rowIndex && !!stateClass;
 
                         return (
                             <div
                                 key={`${rowIndex}-${colIndex}`}
-                                className={`wordle-cell ${stateClass}`.trim()}
+                                className={`wordle-cell ${stateClass} ${isCellFlipping ? 'is-flipping' : ''}`.trim()}
+                                style={isCellFlipping ? { '--flip-delay': `${colIndex * flipStaggerMs}ms` } : undefined}
                                 role="gridcell"
                                 aria-label={`Row ${rowIndex + 1} column ${colIndex + 1}: ${letter || 'empty'}`}
                             >
@@ -147,7 +161,7 @@ export function WordleBoard({ targetWord, onRestart }) {
             </p>
 
             <div className="buttons">
-                <button type="button" onClick={submitGuess} disabled={isComplete}>
+                <button type="button" onClick={submitGuess} disabled={isComplete || isFlipping}>
                     Submit Guess
                 </button>
                 <button type="button" onClick={onRestart}>

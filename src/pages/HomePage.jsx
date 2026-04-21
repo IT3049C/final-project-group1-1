@@ -1,8 +1,17 @@
 import { Link, useSearchParams } from "react-router-dom";
+import battleshipIcon from "../assets/images/battleship.png";
+import tttIcon from "../assets/images/ttt.png";
+import wordleIcon from "../assets/images/wordle.png";
 
 export function HomePage(){
   const [params, setParams] = useSearchParams();
   const search = (params.get('search') || '').toLowerCase();
+
+  const popularGames = [
+    { label: "Battleship", to: "/game/battleship", image: battleshipIcon },
+    { label: "Tic Tac Toe", to: "/game/tic-tac-toe", image: tttIcon },
+    { label: "Wordle", to: "/game/wordle", image: wordleIcon },
+  ];
 
   const games = [
     { key: "rps", name: "Rock Paper Scissors", description: "A simple game of Rock Paper Scissors" },
@@ -20,6 +29,17 @@ export function HomePage(){
     <section>
       <h2>Available Games</h2>
       <p>Choose a game to play</p>
+
+      <div className="popular-games" aria-label="Quick game shortcuts">
+        {popularGames.map((game) => (
+          <Link key={game.label} to={game.to} className="game-button">
+            <img src={game.image} alt="" className="game-button-image" />
+            <span>{game.label}</span>
+          </Link>
+        ))}
+      </div>
+
+      
 
       <input
         id="game-search"

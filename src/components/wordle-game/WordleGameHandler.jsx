@@ -72,23 +72,23 @@ function getFallbackWord() {
 }
 
 export async function getRandomWord() {
-    try {
-        const url = `https://random-word-api.herokuapp.com/word?length=${config.wordLength}`;
-        const response = await fetch(url);
+    // try {
+    //     const url = `https://random-word-api.herokuapp.com/word?length=${config.wordLength}`;
+    //     const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error(`Word API request failed (${response.status})`);
-        }
+    //     if (!response.ok) {
+    //         throw new Error(`Word API request failed (${response.status})`);
+    //     }
 
-        const payload = await response.json();
-        const candidate = normalizeGuess(payload?.[0]);
+    //     const payload = await response.json();
+    //     const candidate = normalizeGuess(payload?.[0]);
 
-        if (isValidWord(candidate)) {
-            return candidate;
-        }
-    } catch (error) {
-        console.error('Error fetching random word:', error);
-    }
+    //     if (isValidWord(candidate)) {
+    //         return candidate;
+    //     }
+    // } catch (error) {
+    //     console.error('Error fetching random word:', error);
+    // }
 
     return getFallbackWord();
 }

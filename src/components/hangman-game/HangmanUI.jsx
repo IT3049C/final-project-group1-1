@@ -60,17 +60,23 @@ export function HangmanUI({
             <div className="hangman-controls" role="group" aria-label="Letter keyboard">
                 {keyboardRows.map((row, rowIndex) => (
                     <div key={row} className={`hangman-keyboard-row hangman-keyboard-row-${rowIndex + 1}`}>
-                        {row.split('').map((letter) => (
-                            <button
-                                key={letter}
-                                type="button"
-                                onClick={() => onGuess(letter)}
-                                disabled={guessedLetters.includes(letter) || isGameOver}
-                                aria-label={`Guess letter ${letter}`}
-                            >
-                                {letter}
-                            </button>
-                        ))}
+                        {row.split('').map((letter) => {
+                            const wasGuessed = guessedLetters.includes(letter);
+                            const isCorrectLetter = wasGuessed && word.includes(letter);
+
+                            return (
+                                <button
+                                    key={letter}
+                                    type="button"
+                                    className={isCorrectLetter ? 'hangman ui correct' : 'hangman ui'}
+                                    onClick={() => onGuess(letter)}
+                                    disabled={wasGuessed || isGameOver}
+                                    aria-label={`Guess letter ${letter}`}
+                                >
+                                    {letter}
+                                </button>
+                            );
+                        })}
                     </div>
                 ))}
             </div>
