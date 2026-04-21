@@ -102,7 +102,6 @@ export const LobbyView = () => {
         </button>
       </form>
 
-      {/*Placeholder until game route is added */}
     </section>
   );
 };

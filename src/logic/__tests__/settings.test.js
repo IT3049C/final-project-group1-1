@@ -1,7 +1,6 @@
-import { vi, describe, beforeEach, test, expect } from "vitest";
-import { saveSettings, loadSettings, getHighscores, setHighscores } from "../settings";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { getHighscores, loadSettings, saveSettings, setHighscores } from "../settings";
 
-// Mock localStorage
 const localStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
@@ -9,86 +8,82 @@ const localStorageMock = {
   clear: vi.fn(),
 };
 
-Object.defineProperty(window, "localStorage", {
-  value: localStorageMock,
-});
-
-describe("Settings", () => {
+describe("settings storage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubGlobal("localStorage", localStorageMock);
   });
 
-  describe("saveSettings", () => {
-    test("saves settings to localStorage", () => {
-      const settings = { theme: "dark", sound: true };
-      saveSettings(settings);
-
-      expect(localStorageMock.setItem).toHaveBeenCalledWith("game.settings", JSON.stringify(settings));
-    });
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
-  describe("loadSettings", () => {
-    test("returns parsed settings when data exists", () => {
-      const settings = { theme: "dark", sound: true };
-      localStorageMock.getItem.mockReturnValue(JSON.stringify(settings));
+  test("saveSettings writes serialized settings", () => {
+    const settings = { theme: "dark", sound: true };
 
-      const result = loadSettings();
+    saveSettings(settings);
 
-      expect(localStorageMock.getItem).toHaveBeenCalledWith("game.settings");
-      expect(result).toEqual(settings);
-    });
-
-    test("returns null when no data exists", () => {
-      localStorageMock.getItem.mockReturnValue(null);
-
-      const result = loadSettings();
-
-      expect(result).toBeNull();
-    });
-
-    test("returns null when data is invalid JSON", () => {
-      localStorageMock.getItem.mockReturnValue("invalid json");
-
-      const result = loadSettings();
-
-      expect(result).toBeNull();
-    });
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      "game.settings",
+      JSON.stringify(settings),
+    );
   });
 
-  describe("getHighscores", () => {
-    test("returns parsed highscores when data exists", () => {
-      const highscores = [{ name: "Player1", score: 100 }];
-      localStorageMock.getItem.mockReturnValue(JSON.stringify(highscores));
+  test("loadSettings returns parsed object when stored", () => {
+    const settings = { theme: "light", sound: false };
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(settings));
 
-      const result = getHighscores();
+    const loaded = loadSettings();
 
-      expect(localStorageMock.getItem).toHaveBeenCalledWith("game.highscores");
-      expect(result).toEqual(highscores);
-    });
-
-    test("returns empty array when no data exists", () => {
-      localStorageMock.getItem.mockReturnValue(null);
-
-      const result = getHighscores();
-
-      expect(result).toEqual([]);
-    });
-
-    test("returns empty array when data is invalid JSON", () => {
-      localStorageMock.getItem.mockReturnValue("invalid json");
-
-      const result = getHighscores();
-
-      expect(result).toEqual([]);
-    });
+    expect(localStorageMock.getItem).toHaveBeenCalledWith("game.settings");
+    expect(loaded).toEqual(settings);
   });
 
-  describe("setHighscores", () => {
-    test("saves highscores to localStorage", () => {
-      const highscores = [{ name: "Player1", score: 100 }];
-      setHighscores(highscores);
+  test("loadSettings returns null when missing", () => {
+    localStorageMock.getItem.mockReturnValue(null);
 
-      expect(localStorageMock.setItem).toHaveBeenCalledWith("game.highscores", JSON.stringify(highscores));
-    });
+    expect(loadSettings()).toBeNull();
+  });
+
+  test("loadSettings returns null when malformed", () => {
+    localStorageMock.getItem.mockReturnValue("not-json");
+
+    expect(loadSettings()).toBeNull();
+  });
+
+  test("getHighscores returns parsed list when stored", () => {
+    const highscores = [
+      { name: "Player1", score: 100 },
+      { name: "Player2", score: 50 },
+    ];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(highscores));
+
+    const list = getHighscores();
+
+    expect(localStorageMock.getItem).toHaveBeenCalledWith("game.highscores");
+    expect(list).toEqual(highscores);
+  });
+
+  test("getHighscores returns empty list when missing", () => {
+    localStorageMock.getItem.mockReturnValue(null);
+
+    expect(getHighscores()).toEqual([]);
+  });
+
+  test("getHighscores returns empty list when malformed", () => {
+    localStorageMock.getItem.mockReturnValue("oops");
+
+    expect(getHighscores()).toEqual([]);
+  });
+
+  test("setHighscores writes serialized list", () => {
+    const highscores = [{ name: "Player1", score: 100 }];
+
+    setHighscores(highscores);
+
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      "game.highscores",
+      JSON.stringify(highscores),
+    );
   });
 });
