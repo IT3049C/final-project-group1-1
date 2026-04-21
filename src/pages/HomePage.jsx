@@ -72,6 +72,20 @@ export function HomePage(){
         ))}
       </ul>
     </section>
+
+    <section>
+      <h2>About</h2>
+      <p>Welcome to the Games Lobby! Here you can find a variety of classic games to play.</p>
+      <p>Created by:</p>
+      <ul>
+        <li>Aneesh Palande</li>
+        <li>Hudson DeGrace</li>
+      </ul>
+      <p>For IT3049C - Web Game Development</p>
+      <p>Spring 2026 - Professor Gilany</p>
+    </section>
+
+
     </>
   );
 }
