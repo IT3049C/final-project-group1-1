@@ -3,8 +3,8 @@ export function BattleshipTile({
   row, 
   col, 
   selectedShip, 
-  isValidStart, 
-  onTileClick, 
+  isValidStart,
+  onTileClick,
   placedShips 
 }){
   // Check if this tile is part of a placed ship
@@ -21,6 +21,7 @@ export function BattleshipTile({
 
   const handleClick = () => {
     onTileClick(row, col);
+    console.log(placedShips);
   };
 
   return(

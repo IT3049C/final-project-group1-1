@@ -13,7 +13,7 @@ export function BattleshipPage(){
         <h2>Battleship</h2>
       </header>
       <PlayerInfoCard playerName={playerName} playerAvatar={playerAvatar}/>
-      <BattleshipBoard />
+      <BattleshipBoard playerName={playerName}/>
     </div>
   );
 }

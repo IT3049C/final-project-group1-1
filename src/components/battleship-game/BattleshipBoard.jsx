@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { BattleshipTile } from './BattleshipTile';
+import { useState } from 'react';
+import { BattleshipGrid } from './BattleshipGrid';
 import { ShipSelector } from './ShipSelector';
 
 // Ship definitions
@@ -10,12 +10,12 @@ const SHIPS = {
   submarine: { name: 'Submarine', size: 3 },
   destroyer: { name: 'Destroyer', size: 2 }
 };
+const BASE = 'https://game-room-api.fly.dev'
 
-export function BattleshipBoard(){
+export function BattleshipBoard({ playerName }){
   const BATTLESHIP_GRID_SIZE = 10;
-  const [grid, setGrid] = useState([]);
   const [placementPhase, setPlacementPhase] = useState(true);
-  const [shipsPlacement, setShipsPlacement] = useState([]);
+  const [connectPhase, setConnectPhase] = useState(false);
   const [selectedShip, setSelectedShip] = useState();
   const [isHorizontal, setIsHorizontal] = useState(true);
   const [placedShips, setPlacedShips] = useState({
@@ -25,9 +25,20 @@ export function BattleshipBoard(){
     submarine: { placed: false, positions: [] },
     destroyer: { placed: false, positions: [] }
   });
+  const [createdRoomId, setCreatedRoomId] = useState(null);
+  const [gameState, setGameState] = useState({
+    players: [],
+    boards: {
+      p1: {shipsPosition: [], hits: [], misses: []},
+      p2: {shipsPosition: [], hits: [], misses: []}
+    },
+    turn: null,
+    winner: null,
+    version: 0
+  })
 
   // Validate if a ship can be placed at the given position
-  const validatePlacement = (startRow, startCol, shipKey, horizontal) => {
+  function validatePlacement(startRow, startCol, shipKey, horizontal, ignoreShipKey = null){
     const ship = SHIPS[shipKey.toLowerCase()];
     if (!ship) return { valid: false, positions: [] };
 
@@ -43,9 +54,9 @@ export function BattleshipBoard(){
         return { valid: false, positions: [] };
       }
 
-      // Check if tile is already occupied
-      const occupied = Object.values(placedShips).some(placedShip =>
-        placedShip.placed && placedShip.positions.some(pos => pos.row === row && pos.col === col)
+      // Check if tile is already occupied by a different ship
+      const occupied = Object.entries(placedShips).some(([placedShipKey, placedShip]) =>
+        placedShip.placed && placedShipKey !== ignoreShipKey && placedShip.positions.some(pos => pos.row === row && pos.col === col)
       );
       if (occupied) {
         return { valid: false, positions: [] };
@@ -57,14 +68,12 @@ export function BattleshipBoard(){
     return { valid: true, positions };
   };
 
-  // Handle tile click for placement
-  const handleTileClick = (row, col) => {
+  function handleTileClick(row, col){
     if (!selectedShip) return;
 
-    const validation = validatePlacement(row, col, selectedShip, isHorizontal);
+    const validation = validatePlacement(row, col, selectedShip, isHorizontal, selectedShip.toLowerCase());
     if (!validation.valid) return;
 
-    // Place the ship
     setPlacedShips(prev => ({
       ...prev,
       [selectedShip.toLowerCase()]: {
@@ -73,58 +82,80 @@ export function BattleshipBoard(){
       }
     }));
 
-    // Clear selection
     setSelectedShip(null);
   };
 
-  useEffect(() => {
-    const newGrid = [];
-    for(let i = 0; i < BATTLESHIP_GRID_SIZE; i++){
-      newGrid.push([]);
-    }
-    let tileCount = 0;
+  function onReady(){
+    setPlacementPhase(false);
+    setConnectPhase(true);
+  }
 
-    for(let row = 0; row < BATTLESHIP_GRID_SIZE; row++){
-      for(let col = 0; col < BATTLESHIP_GRID_SIZE; col++){
-        newGrid[row][col] = {key: tileCount, 
-        id: `row:${row}-col:${col}`, 
-        isEmpty: true,
-        isHit: false};
-        tileCount++;
-      }
-    }
-    setGrid(newGrid);
-  }, []);
+  function handleSubmit(e){
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+  }
+
+  async function handleCreateRoom(){
+    const { roomId } = await apiCreateRoom(gameState);
+    setCreatedRoomId(roomId);
+    console.log(`${BASE}/api/rooms`);
+    setConnectPhase(false);
+  }
+
+  async function apiCreateRoom(initialState){
+    const res = await fetch(`${BASE}/api/rooms`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ initialState })
+    });
+    if(!res.ok) throw new Error('Failed to create room');
+    return res.json();
+  }
 
   return(
     <div id="battleship-game">
+      {createdRoomId && 
+      <div id='game-room-display'>
+        <h2>Game Room Code:</h2>
+        <h1>{createdRoomId}</h1>
+      </div>}
       {placementPhase && 
       (<ShipSelector 
         setSelectedShip={setSelectedShip}
         setIsHorizontal={setIsHorizontal}
       />)}
 
-      <div id="battleship-grid">
-        {grid.map((row, rowIndex) => (
-          <div key={`row-${rowIndex}`} className="battleship-row">
-            {row.map((tile, colIndex) => {
-              const isValidStart = selectedShip ? validatePlacement(rowIndex, colIndex, selectedShip, isHorizontal).valid : false;
-              return (
-                <BattleshipTile 
-                  key={tile.key}
-                  tile={tile}
-                  row={rowIndex}
-                  col={colIndex}
-                  selectedShip={selectedShip}
-                  isValidStart={isValidStart}
-                  onTileClick={handleTileClick}
-                  placedShips={placedShips}
-                />
-              );
-            })}
+      {!connectPhase && (
+        <BattleshipGrid
+          gridSize={BATTLESHIP_GRID_SIZE}
+          selectedShip={selectedShip}
+          isHorizontal={isHorizontal}
+          placedShips={placedShips}
+          validatePlacement={validatePlacement}
+          onTileClick={handleTileClick}
+        />
+      )}
+
+      {placementPhase && Object.values(placedShips).every(ship => ship.placed) && (
+        <button
+          id="start-game-btn"
+          onClick={() => onReady()}
+        >
+          Ready For Battle!
+        </button>
+      )}
+      {connectPhase && 
+      <div id='connect-to-game-room'>
+        <form onSubmit={handleSubmit}>
+          <div className='field'>
+            <label htmlFor='room-code'>Input a room code: </label>
+            <input id='room-code' type='text' placeholder='ABC123' name='room-code'/>
           </div>
-        ))}
-      </div>
+          <button id='create-game-room' type='button' onClick={handleCreateRoom}>Create Game Room</button>
+          <button type='submit'>Join Game Room</button>
+        </form>
+      </div>}
     </div>
   );
 }
