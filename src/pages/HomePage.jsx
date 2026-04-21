@@ -34,7 +34,7 @@ export function HomePage(){
         <div className="popular-games" aria-label="Quick game shortcuts">
           {popularGames.map((game) => (
             <Link key={game.label} to={game.to} className="game-button">
-              <img src={game.image} alt="" className="game-button-image" /><br></br>
+              <img src={game.image} alt="image" className="game-button-image" /><br></br>
               <span>{game.label}</span>
             </Link>
           ))}
