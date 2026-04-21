@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import { applySavedTheme } from "./utils/theme.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -9,6 +10,7 @@ import { LobbyView } from "./pages/LobbyPage.jsx";
 import { RPSGamePage } from "./pages/RPSGamePage.jsx";
 import { TicTacToePage } from "./pages/TicTacToePage.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { BattleshipPage } from "./pages/BattleshipPage.jsx";
 import { WordleGamePage } from "./pages/WordleGamePage.jsx";
 import { HangmanGamePage } from "./pages/HangmanGamePage.jsx";
 
@@ -31,6 +33,11 @@ const router = createBrowserRouter([
           <TicTacToePage />
         </ProtectedRoute>
       )},
+      {path: '/game/battleship', element: (
+        <ProtectedRoute>
+          <BattleshipPage />
+        </ProtectedRoute>
+      )},
       {path: '/game/wordle', element: (
         <ProtectedRoute>
           <WordleGamePage />
@@ -46,8 +53,12 @@ const router = createBrowserRouter([
   },
 ])
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>
 );
