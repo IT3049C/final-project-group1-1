@@ -1,4 +1,4 @@
-import { PlayerInfoCard } from "../components/rps-game/PlayerInfoCard";
+import { PlayerInfoCard } from "../components/PlayerInfoCard";
 import { WordleMain } from "../components/wordle-game/WordleMain";
 import { loadSettings } from "../logic/settings";
 

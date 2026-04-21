@@ -1,4 +1,4 @@
-import { PlayerInfoCard } from "../components/rps-game/PlayerInfoCard";
+import { PlayerInfoCard } from "../components/PlayerInfoCard";
 import { HangmanHandler } from "../components/hangman-game/HangmanHandler";
 import { loadSettings } from "../logic/settings";
 
