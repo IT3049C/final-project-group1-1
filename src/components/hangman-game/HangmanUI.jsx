@@ -29,17 +29,12 @@ export function HangmanUI({
 
     const guessedWordProgress = `${guessedLetters.filter((letter) => word.includes(letter)).length}/${totalUniqueLetters}`;
     const failedAttemptText = failedWord.slice(0, wrongGuesses).split('').join(' ');
-    const currentImagePlaceholder = HANGMAN_STAGE_IMAGES[wrongGuesses] || HANGMAN_STAGE_IMAGES[0];
     const isGameOver = status === 'won' || status === 'lost';
     const keyboardRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 
     return (
         <div className="hangman-ui">
             <h3>Guess The Word</h3>
-            <div className="hangman-image-stage" aria-live="polite">
-                <p>Image Stage Placeholder</p>
-                <p>{currentImagePlaceholder}</p>
-            </div>
 
             <p className="hangman-word" aria-live="polite">
                 {displayWord}
