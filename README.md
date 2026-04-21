@@ -1,5 +1,9 @@
 # GameHub
 
+Team Members:
+- Aneesh Palande
+- Hudson Degrace
+
 ## Checklist
 
 - [ ] frequent commits to github.
@@ -9,22 +13,22 @@
 <!--- Update the following line with your self-grade --->
 <!--- Check the Rubric on Canvas for a guideline --->
 
-I should get **( )** out of 20 on this assignment.
+I should get **(20)** out of 20 on this assignment.
 
 ## Self-Reflection
 
 - **How long it took me to finish this?**
-<!-- Answer below this line -->
--
+
+- 10 Hours
 
 - **What do you think of this completion time?**
-<!-- Answer below this line -->
-- 
+
+- It was pretty fine, it was good enough to get a basic version of the app working.
 
 - **In hindsight, what would you do differently?**
-- <!-- Answer below this line -->
+- Start earlier, we ran into some issues that could've been easily avoided if we started earlier.
 - 
 
 - **What resources did you use?**
-- <!-- Answer below this line -->
+- Documentation for playwright, tanstack, react router, copilot.
 - 
