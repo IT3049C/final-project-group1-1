@@ -25,21 +25,26 @@ export function HomePage(){
     !search || game.name.toLowerCase().includes(search)
   ))
 
-  return(
+  return(<>
     <section>
       <h2>Available Games</h2>
-      <p>Choose a game to play</p>
+      <p>Pick from one of our popular games:</p>
 
-      <div className="popular-games" aria-label="Quick game shortcuts">
-        {popularGames.map((game) => (
-          <Link key={game.label} to={game.to} className="game-button">
-            <img src={game.image} alt="" className="game-button-image" />
-            <span>{game.label}</span>
-          </Link>
-        ))}
+      <div backgroundColor="#f0f0f0">
+        <div className="popular-games" aria-label="Quick game shortcuts">
+          {popularGames.map((game) => (
+            <Link key={game.label} to={game.to} className="game-button">
+              <img src={game.image} alt="" className="game-button-image" /><br></br>
+              <span>{game.label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
+      </section>
 
-      
+      <section>
+      <h2>Find a game</h2>
+      <p>Don't see what you're looking for? Search all games below:</p>
 
       <input
         id="game-search"
@@ -67,5 +72,6 @@ export function HomePage(){
         ))}
       </ul>
     </section>
+    </>
   );
 }
