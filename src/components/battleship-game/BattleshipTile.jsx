@@ -5,23 +5,47 @@ export function BattleshipTile({
   selectedShip, 
   isValidStart,
   onTileClick,
-  placedShips 
+  placedShips,
+  attacked,
+  isEnemy
 }){
   // Check if this tile is part of a placed ship
   const isPlaced = Object.values(placedShips).some(placedShip =>
     placedShip.placed && placedShip.positions.some(pos => pos.row === row && pos.col === col)
   );
 
+  const attackedTile = attacked.find(a => a.row === row && a.col === col);
+
+  let display = '🌊';
   let className = 'battleship-tile';
-  if (isPlaced) {
-    className += ' placed-ship';
-  } else if (selectedShip) {
+
+  if (isEnemy) {
+    if (attackedTile) {
+      display = attackedTile.hit ? '💥' : '❌';
+      className += attackedTile.hit ? ' hit' : ' miss';
+    }
+  } else {
+    if (isPlaced) {
+      if (attackedTile && attackedTile.hit) {
+        display = '💥';
+        className += ' hit';
+      } else {
+        display = '🚢';
+        className += ' placed-ship';
+      }
+    } else if (attackedTile) {
+      display = attackedTile.hit ? '💥' : '❌';
+      className += attackedTile.hit ? ' hit' : ' miss';
+    }
+  }
+
+  if (selectedShip) {
     className += isValidStart ? ' potential-valid' : ' potential-invalid';
   }
 
   const handleClick = () => {
+    if (isEnemy && attackedTile) return;
     onTileClick(row, col);
-    console.log(placedShips);
   };
 
   return(
@@ -31,7 +55,7 @@ export function BattleshipTile({
       className={className}
       onClick={handleClick}
     >
-      {isPlaced ? '🚢' : '🌊'}
+      {display}
     </button>
   );
 }

@@ -7,7 +7,9 @@ export function BattleshipGrid({
   isHorizontal,
   placedShips,
   validatePlacement,
-  onTileClick
+  onTileClick,
+  attacked,
+  isEnemy
 }) {
   const grid = useMemo(() => {
     const rows = [];
@@ -27,7 +29,7 @@ export function BattleshipGrid({
   }, [gridSize]);
 
   return (
-    <div id="battleship-grid">
+    <div className="battleship-grid">
       {grid.map((row, rowIndex) => (
         <div key={`row-${rowIndex}`} className="battleship-row">
           {row.map((tile, colIndex) => {
@@ -51,6 +53,8 @@ export function BattleshipGrid({
                 isValidStart={isValidStart}
                 onTileClick={onTileClick}
                 placedShips={placedShips}
+                attacked={attacked}
+                isEnemy={isEnemy}
               />
             );
           })}
