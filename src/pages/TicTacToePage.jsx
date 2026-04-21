@@ -7,8 +7,8 @@ import {
   createInitialTicTacToeState,
   getPlayerForMark,
   getPlayerMark,
-} from "../logic/ticTacToe";
-import { createRoom, readRoom, updateRoom } from "../logic/ticTacToeRoom";
+} from "../components/tic-tac-toe-game/ticTacToe";
+import { createRoom, readRoom, updateRoom } from "../components/tic-tac-toe-game/ticTacToeRoom";
 
 export function TicTacToePage() {
   const settings = loadSettings();
