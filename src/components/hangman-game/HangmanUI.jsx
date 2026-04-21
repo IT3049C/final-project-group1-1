@@ -31,7 +31,7 @@ export function HangmanUI({
     const failedAttemptText = failedWord.slice(0, wrongGuesses).split('').join(' ');
     const currentImagePlaceholder = HANGMAN_STAGE_IMAGES[wrongGuesses] || HANGMAN_STAGE_IMAGES[0];
     const isGameOver = status === 'won' || status === 'lost';
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const keyboardRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 
     return (
         <div className="hangman-ui">
@@ -57,17 +57,21 @@ export function HangmanUI({
             </p>
             <p aria-live="polite">Correct letters found: {guessedWordProgress}</p>
 
-            <div className="hangman-controls">
-                {alphabet.map((letter) => (
-                    <button
-                        key={letter}
-                        type="button"
-                        onClick={() => onGuess(letter)}
-                        disabled={guessedLetters.includes(letter) || isGameOver}
-                        aria-label={`Guess letter ${letter}`}
-                    >
-                        {letter}
-                    </button>
+            <div className="hangman-controls" role="group" aria-label="Letter keyboard">
+                {keyboardRows.map((row, rowIndex) => (
+                    <div key={row} className={`hangman-keyboard-row hangman-keyboard-row-${rowIndex + 1}`}>
+                        {row.split('').map((letter) => (
+                            <button
+                                key={letter}
+                                type="button"
+                                onClick={() => onGuess(letter)}
+                                disabled={guessedLetters.includes(letter) || isGameOver}
+                                aria-label={`Guess letter ${letter}`}
+                            >
+                                {letter}
+                            </button>
+                        ))}
+                    </div>
                 ))}
             </div>
 

@@ -185,6 +185,41 @@ nav div {
   border-radius: 8px;
 }
 
+.hangman-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(100%, 620px);
+  align-items: center;
+}
+
+.hangman-keyboard-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(2.4rem, 1fr);
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.hangman-keyboard-row-1 {
+  max-width: 100%;
+}
+
+.hangman-keyboard-row-2 {
+  max-width: 90%;
+}
+
+.hangman-keyboard-row-3 {
+  max-width: 78%;
+}
+
+.hangman-controls button {
+  min-height: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0;
+}
+
 .hangman-controls button:disabled {
   background-color: #aaaaaa;
   color: #666666;
@@ -196,4 +231,20 @@ nav div {
   font-size: 2rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .hangman-controls {
+    gap: 0.35rem;
+  }
+
+  .hangman-keyboard-row {
+    gap: 0.3rem;
+    grid-auto-columns: minmax(2rem, 1fr);
+  }
+
+  .hangman-controls button {
+    min-height: 2.2rem;
+    font-size: 0.85rem;
+  }
 }
