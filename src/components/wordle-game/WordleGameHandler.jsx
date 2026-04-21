@@ -43,7 +43,6 @@ export function checkGuess(guess, targetWord) {
     const targetChars = normalizedTarget.split('');
     const guessChars = normalizedGuess.split('');
 
-    // Pass 1: exact matches.
     for (let index = 0; index < config.wordLength; index++) {
         if (guessChars[index] === targetChars[index]) {
             results[index] = 'correct';
@@ -52,7 +51,6 @@ export function checkGuess(guess, targetWord) {
         }
     }
 
-    // Pass 2: misplaced matches with duplicate handling.
     for (let index = 0; index < config.wordLength; index++) {
         if (!guessChars[index]) {
             continue;
